@@ -4,6 +4,7 @@ Scrape data from the Twitter page
 import sys
 import requests
 import re
+from time import sleep
 from bs4 import BeautifulSoup as bs
 import bs4
 import os
@@ -50,10 +51,10 @@ def extract_memes(_buffer, filename):
         pass
     fp2 = open('{}/{}_data.txt'.format(filename, filename), 'a')
     
-    print 'Making soup for {}..\n'.format(filename)
+    print 'Making soup for {}...'.format(filename)
     soup = bs(_buffer, 'html.parser')
     soup.ignore_links = True
-    print 'Done making soup..\n'
+    print 'Done\n'
 
     items = [i for i in list(soup.children) if isinstance(i, bs4.element.Tag)]
     print 'Total items: {}\n'.format(len(items))
