@@ -4,7 +4,6 @@ Scrape data from the Twitter page
 import sys
 import requests
 import re
-from time import sleep
 from bs4 import BeautifulSoup as bs
 import bs4
 import os
@@ -15,21 +14,16 @@ params = {"include_available_features":1,
           "include_entities":1,
           "reset_error_state":False}
 
-
 def remove_link(text):
     reg_exp = 'pic.twitter.com/\S*'
     return re.sub(reg_exp, '', text)
     
-
-def write_to_file(buffer):
-    """
-    Append the html pages into a file
-    """
-    fp = open('off_memes.txt', 'a')
-    fp.write(buffer.encode('utf-8'))
-    fp.close()
-
 def download_image(images_dict, filename):
+    """
+    Params: images_dict: Dict object - Map of image name and image url
+            filename: String - Twitter Account handle
+    Download images and store it in images/ folder
+    """
     for name, url in images_dict.items():
         print 'Downloading {}'.format(name)
         path = '{}/images/{}'.format(filename, name)
@@ -45,13 +39,11 @@ def download_image(images_dict, filename):
             
 def extract_memes(_buffer, filename):
     """
+    Extract text/images from the raw HTML data
+    Params: _buffer: String - Raw HTML data
+            filename: String - Twitter Account handle
     """
     images_dict = {}
-    
-    # fp = open(filename+'.txt', 'r')
-    # _buffer = fp.read()
-    # fp.close()
-    
     try:
         os.makedirs(filename+'/images')
     except:
@@ -67,10 +59,10 @@ def extract_memes(_buffer, filename):
     print 'Total items: {}\n'.format(len(items))
 
     print 'Reading tweets content..',
+
     for counter, html in enumerate(items):
         tweet_id = html.find('div').get('data-item-id')
         try:
-            
             tweet_content = html.find('div').find('div', {'class': 'js-tweet-text-container'}).find('p').text.strip().replace('\n', ' ')
             tweet_content = remove_link(tweet_content)
             if not tweet_content:
