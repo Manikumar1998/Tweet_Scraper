@@ -1,2 +1,3 @@
 requests
 bs4
+google_api_translate
